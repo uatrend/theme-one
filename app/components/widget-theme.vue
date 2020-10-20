@@ -1,72 +1,101 @@
 <template>
-
     <div class="uk-form-horizontal">
-
-        <div class="uk-form-row">
+        <div class="uk-margin">
             <span class="uk-form-label">{{ 'Title' | trans }}</span>
             <div class="uk-form-controls uk-form-controls-text">
-                <label><input type="checkbox" v-model="widget.theme.title_hide"> {{ 'Hide Title' | trans }}</label>
+                <label><input v-model="options.title_hide" class="uk-checkbox" type="checkbox"> {{ 'Hide Title' | trans }}</label>
             </div>
         </div>
 
-        <div class="uk-form-row">
+        <div class="uk-margin">
             <label for="form-theme-title-size" class="uk-form-label">{{ 'Title Size' | trans }}</label>
             <div class="uk-form-controls">
-                <select id="form-theme-title-size" class="uk-form-width-large" v-model="widget.theme.title_size">
-                    <option value="uk-panel-title">{{ 'Default' | trans }}</option>
-                    <option value="uk-h1 uk-margin-top-remove">{{ 'H1' | trans }}</option>
-                    <option value="uk-h2 uk-margin-top-remove">{{ 'H2' | trans }}</option>
-                    <option value="uk-h3 uk-margin-top-remove">{{ 'H3' | trans }}</option>
-                    <option value="uk-h4 uk-margin-top-remove">{{ 'H4' | trans }}</option>
-                    <option value="uk-heading-large uk-margin-top-remove">Extra Large</option>
+                <select id="form-theme-title-size" v-model="options.title_size" class="uk-form-width-large uk-select">
+                    <option v-for="(title, value) in heading" :key="value" :value="value">
+                        {{ title | trans }}
+                    </option>
                 </select>
             </div>
         </div>
 
-        <div class="uk-form-row">
+        <div class="uk-margin">
             <span class="uk-form-label">{{ 'Alignment' | trans }}</span>
             <div class="uk-form-controls uk-form-controls-text">
-                <label><input type="checkbox" v-model="widget.theme.alignment"> {{ 'Center the title and content.' | trans }}</label>
+                <label><input v-model="options.alignment" class="uk-checkbox" type="checkbox"> {{ 'Center the title and content.' | trans }}</label>
             </div>
         </div>
 
-        <div class="uk-form-row">
+        <div class="uk-margin">
             <label for="form-theme-badge" class="uk-form-label">{{ 'HTML Class' | trans }}</label>
             <div class="uk-form-controls">
-                <input id="form-theme-badge" class="uk-form-width-large" type="text" v-model="widget.theme.html_class">
+                <input id="form-theme-badge" v-model="options.html_class" class="uk-form-width-large uk-input" type="text">
             </div>
         </div>
 
-        <div class="uk-form-row">
+        <div class="uk-margin">
             <label for="form-theme-panel" class="uk-form-label">{{ 'Panel Style' | trans }}</label>
             <div class="uk-form-controls">
-                <select id="form-theme-panel" class="uk-form-width-large" v-model="widget.theme.panel">
-                    <option value="">{{ 'None' | trans }}</option>
-                    <option value="uk-panel-box">{{ 'Box' | trans }}</option>
-                    <option value="uk-panel-box uk-panel-box-primary">{{ 'Box Primary' | trans }}</option>
-                    <option value="uk-panel-box uk-panel-box-secondary">{{ 'Box Secondary' | trans }}</option>
-                    <option value="uk-panel-header">{{ 'Header' | trans }}</option>
+                <select id="form-theme-panel" v-model="options.panel" class="uk-form-width-large uk-select">
+                    <option value="">
+                        {{ 'None' | trans }}
+                    </option>
+                    <option value="uk-card uk-card-default uk-card-body">
+                        {{ 'Card' | trans }}
+                    </option>
+                    <option value="uk-card uk-card-primary uk-card-body">
+                        {{ 'Card Primary' | trans }}
+                    </option>
+                    <option value="uk-card uk-card-secondary uk-card-body">
+                        {{ 'Card Secondary' | trans }}
+                    </option>
                 </select>
             </div>
         </div>
-
     </div>
-
 </template>
 
 <script>
 
-    module.exports = {
+import WidgetMixin from '@system/modules/widget/app/mixins/widget-mixin';
 
-        section: {
-            label: 'Theme',
-            priority: 90
-        },
+const WidgetTheme = {
 
-        props: ['widget', 'config']
+    mixins: [WidgetMixin],
 
-    };
+    section: {
+        label: 'Theme',
+        priority: 90
+    },
 
-    window.Widgets.components['theme'] = module.exports;
+    data() {
+        return {
+            heading: {
+                'uk-h1': 'H1',
+                'uk-h2': 'H2',
+                'uk-h3': 'H3',
+                'uk-h4': 'H3',
+                'uk-card-title': 'Card Title',
+                'uk-heading-large': 'Extra Large'
+            },
+            menus: false
+        };
+    },
+
+    computed: {
+        options() {
+            return this.widget.theme;
+        }
+    },
+
+    created() {
+        if (!this.options.title_size || !_.filter(this.heading, (title, value) => value === this.options.title_size).length) {
+            this.options.title_size = 'uk-h3';
+        }
+    }
+};
+
+export default WidgetTheme;
+
+window.Widgets.components.theme = WidgetTheme;
 
 </script>
