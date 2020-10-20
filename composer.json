@@ -5,7 +5,6 @@
     "title": "One",
     "description": "Pagekit's default theme.",
     "license": "MIT",
-    "copyright": "(c) 2016 Pagekit",
     "authors": [
         {
             "name": "Pagekit",
@@ -17,6 +16,6 @@
         "image": "image.jpg"
     },
     "archive": {
-        "exclude": ["!/app", "!/css", "/app/assets"]
+        "exclude": ["node_modules", "!/app", "!/css", "/app/assets", "gulpfile.js", "package.json"]
     }
 }
